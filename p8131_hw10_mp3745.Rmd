@@ -45,3 +45,18 @@ survdiff(Surv(time, cens) ~ group, data = data)
 ```
 
 Since p-value < 0.05, we fail to reject the null hypothesis that the hazard rate functions are the same for both groups at all time t.
+
+
+## Problem 2
+
+Read in the data
+```{r}
+data("kidtran")
+```
+
+Compare the survival curves for different races in each sex group
+```{r}
+ggsurvplot(survfit(Surv(time, delta) ~ gender + race, data = kidtran), conf.int = TRUE)
+```
+
+Based on the above survival curves, it looks like gender = 2 and race = 2 have the worse survival. The survival curves for the other race/gender groups are fairly similar and better than gender = 2, race = 2.
