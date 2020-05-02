@@ -60,3 +60,34 @@ ggsurvplot(survfit(Surv(time, delta) ~ gender + race, data = kidtran), conf.int 
 ```
 
 Based on the above survival curves, it looks like gender = 2 and race = 2 have the worse survival. The survival curves for the other race/gender groups are fairly similar and better than gender = 2, race = 2.
+
+
+## Problem 3
+
+Read in the data
+```{r}
+data("larynx")
+
+# convert stage 2 to single binary column
+larynx_bin = larynx %>% 
+  mutate(
+    stage_1 = as.factor(if_else(stage == 1, 1, 0)),
+    stage_2 = as.factor(if_else(stage == 2, 1, 0)),
+    stage_3 = as.factor(if_else(stage == 3, 1, 0)),
+    stage_4 = as.factor(if_else(stage == 4, 1, 0)),
+    stage = as.factor(stage)
+  )
+```
+
+Fit a proportional hazards model using the covariates Z1, Z2, Z3, Z4 and the interaction term Z1 * Z4
+```{r}
+ph_mod = coxph(Surv(time, delta) ~ stage_2 + stage_3 + stage_4 + age + stage_2 * age, data = larynx_bin, ties = 'breslow')
+
+summary(ph_mod)
+```
+
+From the model, age is not significantly related to time to death, holding stage constant. The hazard ratio between stage 2 and stage 1, while holding age constant is 0.0006. The hazard ratio between stage 3 and stage 1, while holding age constant is 1.862. The hazard ratio between stage 4 and stage 1, while holding age constant is 5.774. There is a significant stage 2 by age interaction term in time to death.
+
+The relative risk of dying for a stage II patient of age 50 as compared to a stage I patient of the same age is `r exp(ph_mod$coefficients[1] + ph_mod$coefficients[5] * 50)`.
+
+
