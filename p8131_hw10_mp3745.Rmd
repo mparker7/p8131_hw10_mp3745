@@ -27,3 +27,21 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
+
+
+## Problem 1
+
+Test H0 : h1(t) = h2(t) for all t, H1 : h1(t)  ̸= h2(t) for some t using the log-rank test.
+```{r}
+# Enter in the data
+data = tibble(
+  time = c(4, 12, 15, 21, 23, 2, 6, 8, 10, 19),
+  cens = c(1, 0, 1, 0, 1, 1, 0, 0, 1, 1),
+  group = c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2)
+)
+
+# Test hypothesis with log rank test
+survdiff(Surv(time, cens) ~ group, data = data)
+```
+
+Since p-value < 0.05, we fail to reject the null hypothesis that the hazard rate functions are the same for both groups at all time t.

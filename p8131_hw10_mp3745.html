@@ -370,7 +370,28 @@ summary {
 </div>
 
 
+<div id="problem-1" class="section level2">
+<h2>Problem 1</h2>
+<p>Test H0 : h1(t) = h2(t) for all t, H1 : h1(t) ̸= h2(t) for some t using the log-rank test.</p>
+<pre class="r"><code># Enter in the data
+data = tibble(
+  time = c(4, 12, 15, 21, 23, 2, 6, 8, 10, 19),
+  cens = c(1, 0, 1, 0, 1, 1, 0, 0, 1, 1),
+  group = c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2)
+)
 
+# Test hypothesis with log rank test
+survdiff(Surv(time, cens) ~ group, data = data)</code></pre>
+<pre><code>## Call:
+## survdiff(formula = Surv(time, cens) ~ group, data = data)
+## 
+##         N Observed Expected (O-E)^2/E (O-E)^2/V
+## group=1 5        3     4.14     0.313      1.15
+## group=2 5        3     1.86     0.697      1.15
+## 
+##  Chisq= 1.1  on 1 degrees of freedom, p= 0.3</code></pre>
+<p>Since p-value &lt; 0.05, we fail to reject the null hypothesis that the hazard rate functions are the same for both groups at all time t.</p>
+</div>
 
 
 
